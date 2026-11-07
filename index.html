@@ -26,10 +26,10 @@
   .sec { background:#fff; color:var(--brand); }
   .row { display:flex; gap:8px; }
   .row button { margin:4px 0 12px; padding:10px; font-size:14px; }
-  .yes { background:#fff; color:var(--ok); border-color:var(--ok); } .no { background:#fff; color:var(--bad); border-color:var(--bad); }
-  .on.yes { background:var(--ok); color:#fff; } .on.no { background:var(--bad); color:#fff; }
+  button.yes { background:#fff; color:var(--ok); border-color:var(--ok); } button.no { background:#fff; color:var(--bad); border-color:var(--bad); }
+  button.on.yes { background:var(--ok); color:#fff; } button.on.no { background:var(--bad); color:#fff; }
   code, textarea { font: 13px/1.4 ui-monospace, Menlo, monospace; }
-  textarea { width:100%; min-height:140px; border:1px solid var(--line); border-radius:10px; padding:10px; background:var(--paper); }
+  textarea { font-size:16px; width:100%; min-height:140px; border:1px solid var(--line); border-radius:10px; padding:10px; background:var(--paper); }
   dl { display:grid; grid-template-columns: auto 1fr; gap:4px 10px; margin:8px 0; font-size:14px; }
   dt { color:var(--muted); } dd { margin:0; font-weight:600; word-break: break-word; }
   ol { padding-left: 20px; margin: 6px 0; } li { margin: 4px 0; }
@@ -176,7 +176,10 @@
     if (!('setAppBadge' in navigator)) { R[where].badge = 'não existe aqui'; save(); return; }
     navigator.setAppBadge(3).then(function () { R[where].badge = 'pedido (veja o número 3 no ícone)'; save(); }).catch(function (e) { R[where].badge = 'erro: ' + e.message; save(); });
   });
+  /* ?only=d: one link alone at the very top (for driving the test from a mirrored screen) */
+  var only = new URLSearchParams(location.search).get('only');
   render();
+  if (only) { var v = VARIANTS.filter(function (x) { return x[0] === only; })[0]; if (v) { var a = document.createElement('a'); a.className = 'btn'; a.id = 'only'; a.href = v[2]; a.textContent = 'Abrir ' + v[0].toUpperCase() + ' · ' + v[1]; document.querySelector('main').insertBefore(a, document.querySelector('main').firstChild); } }
 })();
 </script>
 </body>

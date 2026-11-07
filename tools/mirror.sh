@@ -22,3 +22,9 @@ case "$1" in
          if \"$2\" is \"spotlight\" then keystroke \"3\" using command down
        end tell" ;;
 esac
+# scroll: mirror.sh scroll <dy>   (negative = page moves up / content scrolls down)
+if [ "$1" = "scroll" ]; then
+  b=($(bounds | tr ',' ' ')); X=$(( b[1] + b[3]/2 )); Y=$(( b[2] + b[4]/2 ))
+  osascript -l JavaScript -e "ObjC.import('CoreGraphics'); var m=\$.CGEventCreateMouseEvent(null, 5, \$.CGPointMake($X,$Y), 0); \$.CGEventPost(0,m); delay(0.1);
+    for (var i=0;i<10;i++){ var e=\$.CGEventCreateScrollWheelEvent(null, 0, 1, Math.round($2/10)); \$.CGEventPost(0,e); delay(0.03);} 'ok'"
+fi
