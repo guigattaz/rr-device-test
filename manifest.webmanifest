@@ -1,0 +1,13 @@
+{
+  "name": "RR Teste",
+  "short_name": "RR Teste",
+  "start_url": "./?from=homescreen",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfaf7",
+  "theme_color": "#15703f",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
