@@ -1,15 +1,17 @@
 #!/bin/zsh
 # Drives the iPhone Mirroring window on the Mac (needs Accessibility + Screen Recording for the app that runs this).
-#   mirror.sh shot <file.png>        screenshot of the mirroring window only
+#   mirror.sh shot <file.png>        photo of the mirroring window itself, by its window number: never what lies on top of it
 #   mirror.sh tap <x> <y>            tap at x,y in window points (0,0 = top-left of the window)
 #   mirror.sh type "<text>"          type text into the focused field
 #   mirror.sh key <name>             return | escape | home (cmd-1) | switcher (cmd-2) | spotlight (cmd-3)
 #   mirror.sh bounds                 window x y w h
-APP="iPhone Mirroring"
+APP="${MIRROR_APP:-iPhone Mirroring}"
 bounds() { osascript -e "tell application \"System Events\" to tell process \"$APP\" to get {position, size} of window 1" | tr -d ' ' ; }
 case "$1" in
   bounds) bounds ;;
-  shot) b=($(bounds | tr ',' ' ')); screencapture -x -R "${b[1]},${b[2]},${b[3]},${b[4]}" "$2" ;;
+  shot) b=($(bounds | tr ',' ' ')); id=$(osascript -l JavaScript "${0:A:h}/winid.js" "$APP" "${b[3]}" "${b[4]}" | awk '{print $1}')
+        [ -n "$id" ] || { echo "no $APP window"; exit 1; }
+        screencapture -x -o -l "$id" "$2" ;;
   tap) b=($(bounds | tr ',' ' ')); X=$(( b[1] + $2 )); Y=$(( b[2] + $3 ))
        osascript -l JavaScript -e "ObjC.import('CoreGraphics'); var p=\$.CGPointMake($X,$Y);
          ['kCGEventLeftMouseDown','kCGEventLeftMouseUp'].forEach(function(t){ var e=\$.CGEventCreateMouseEvent(null, t==='kCGEventLeftMouseDown'?1:2, p, 0); \$.CGEventPost(0, e); delay(0.05); }); 'ok'" ;;
